@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="display: flex;">
+    <button onclick="localhost()">localhost</button>
+    <button onclick="co()">co</button>
+</div>
+<button onclick="save()">save</button>
+<button onclick="loginRecord()">loginRecord</button>
+<button onclick="me()">me</button>
+<div>
+    <div>output</div>
+    <div style="border: 1px solid #444;" id="output"></div>
+</div>
+</body>
+<script>
+    let host = 'http://127.0.0.1:8080/auth'
+    function localhost() {
+        host = 'http://127.0.0.1:8080/auth'
+    }
+    function co() {
+        host = 'http://172.168.2.16:9980/auth'
+    }
+    let token = '';
+    function save() {
+        let url = `${host}/api/account`
+        let formData = new FormData()
+        formData.append('username', 'aaa')
+        formData.append('password', 'aaa')
+        fetch(url, {method: 'post', body: formData}).then(response => response.json()).then(rest => document.getElementById("output").innerHTML = JSON.stringify(rest))
+    }
+    function loginRecord() {
+        let url = `${host}/loginRecord`
+        let formData = new FormData()
+        formData.append('username', 'aaa')
+        formData.append('password', 'aaa')
+        fetch(url, {method: 'post', body: formData}).then(response => response.json()).then(rest => {
+            document.getElementById("output").innerHTML = JSON.stringify(rest)
+            token = rest.data.token
+        })
+    }
+    function me() {
+        let url = `${host}/me`
+        fetch(url, {method: 'get', headers: {Authorization: `Bearer ${token}`}}).then(response => response.json()).then(rest => {
+            document.getElementById("output").innerHTML = JSON.stringify(rest)
+            token = rest.data.token
+        })
+    }
+</script>
+</html>

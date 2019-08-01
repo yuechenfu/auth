@@ -1,0 +1,9 @@
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+        maven { url 'https://repo.spring.io/milestone' }
+	}
+}
+rootProject.name = 'auth'
+
+include 'web', 'sdk'

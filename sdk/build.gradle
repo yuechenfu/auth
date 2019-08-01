@@ -1,0 +1,84 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.3.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.hiveel'
+version = '1.0.24'
+
+description = 'auth-sdk'
+
+sourceCompatibility = '11'
+
+ext {
+	set('springCloudVersion', 'Greenwich.RELEASE')
+}
+
+repositories {
+	mavenLocal()
+	maven {
+		credentials {
+			username 'hiveel'
+			password 'hiveel'
+		}
+		url "http://172.168.2.16:8001/repository/hiveel/"
+	}
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	compile 'com.hiveel:core:1.0.16'
+}
+
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allJava
+	archiveClassifier = 'sources'
+}
+ 
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = 'freitx-auth-sdk'
+			from components.java
+			artifact sourcesJar 
+		}
+	}
+	repositories {
+		maven {
+			credentials {
+				username 'hiveel'
+				password 'hiveel'
+			}
+			url "http://172.168.2.16:8001/repository/hiveel/"
+		}
+	}
+} 
+ 
+
+jar {
+	enabled = true
+	manifest {
+		attributes('Implementation-Title': project.name,
+				'Implementation-Version': project.version)
+	}
+	
+}
+
+bootJar {
+	enabled = false
+}
